@@ -1,0 +1,60 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+group = 'net.starly.joinreward'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+    maven { url = "http://starly.kr:8083/repository/maven-public/"; allowInsecureProtocol = true }
+    maven { url = "https://repo.papermc.io/repository/maven-public/" }
+}
+
+dependencies {
+    compileOnly "org.jetbrains:annotations:23.0.0"
+    compileOnly "org.projectlombok:lombok:1.18.24"
+    annotationProcessor "org.projectlombok:lombok:1.18.24"
+    compileOnly "io.papermc.paper:paper-api:1.19.3-R0.1-SNAPSHOT"
+    compileOnly "net.starly.core:ST-Core:1.7.7"
+    implementation 'org.mariadb.jdbc:mariadb-java-client:2.7.3'
+    implementation 'com.zaxxer:HikariCP:4.0.3'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+jar {
+    archiveFileName = 'R-joinreward.jar'
+    manifest {
+        attributes(
+                'Main-Class': 'net.starly.joinreward.JoinReward'
+        )
+    }
+}
+
+shadowJar {
+    mergeServiceFiles()
+}
+
+task buildSpawnJar(type: Copy) {
+    dependsOn shadowJar
+    from shadowJar.archiveFile
+    into 'C:\\Users\\PC\\Desktop\\TopKid Server\\Spawn\\plugins'
+}
+
+task buildRPGDungeonJar(type: Copy) {
+    dependsOn shadowJar
+    from shadowJar.archiveFile
+    into 'C:\\Users\\PC\\Desktop\\TopKid Server\\RPGDungeon\\plugins'
+}
+
+task buildFarmJar(type: Copy) {
+    dependsOn shadowJar
+    from shadowJar.archiveFile
+    into 'C:\\Users\\PC\\Desktop\\TopKid Server\\Farm\\plugins'
+}
+
+build.dependsOn buildSpawnJar, buildRPGDungeonJar, buildFarmJar

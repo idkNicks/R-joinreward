@@ -1,0 +1,14 @@
+name: R-joinreward
+main: net.starly.joinreward.JoinReward
+author: Starly Team
+website: http://starly.kr/
+
+description: JoinReward Plugin.
+
+depend: [ ST-Core ]
+
+version: 1.0
+api-version: 1.19
+
+commands:
+  접속보상:
