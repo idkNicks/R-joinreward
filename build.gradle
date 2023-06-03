@@ -26,19 +26,6 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
-jar {
-    archiveFileName = 'R-joinreward.jar'
-    manifest {
-        attributes(
-                'Main-Class': 'net.starly.joinreward.JoinReward'
-        )
-    }
-}
-
-shadowJar {
-    mergeServiceFiles()
-}
-
 task buildSpawnJar(type: Copy) {
     dependsOn shadowJar
     from shadowJar.archiveFile
