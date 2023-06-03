@@ -44,8 +44,6 @@ public class DatabaseManager {
         } catch (SQLException e) { e.printStackTrace(); }
     }
 
-    private DatabaseManager() {}
-
     public static Connection getConnection() throws SQLException {
         return ds.getConnection();
     }
