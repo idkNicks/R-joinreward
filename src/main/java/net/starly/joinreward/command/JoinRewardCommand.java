@@ -3,19 +3,17 @@ package net.starly.joinreward.command;
 import net.starly.joinreward.JoinReward;
 import net.starly.joinreward.context.MessageContent;
 import net.starly.joinreward.context.MessageType;
+import net.starly.joinreward.database.PlayerCacheManager;
+import net.starly.joinreward.database.RewardType;
+import net.starly.joinreward.inventory.RewardInventory;
+import net.starly.joinreward.inventory.RewardSettingInventory;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
-import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-public class JoinRewardExecutor implements TabExecutor {
+public class JoinRewardCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -41,37 +39,31 @@ public class JoinRewardExecutor implements TabExecutor {
         }
 
         if (args.length == 0) {
-            // TODO 접속보상 GUI 오픈
+            RewardInventory.getInstance().openInventory(player);
             return true;
         }
 
         if ("설정".equals(args[0]) || "set".equalsIgnoreCase(args[0])) {
 
             if (!player.hasPermission("starly.joinreward.set")) {
-                content.getMessageAfterPrefix(MessageType.ERROR, "noAnOperator").ifPresent(sender::sendMessage);
+                content.getMessageAfterPrefix(MessageType.ERROR, "noAnOperator").ifPresent(player::sendMessage);
                 return false;
             }
 
-            if (args.length != 1) {
-                content.getMessageAfterPrefix(MessageType.ERROR, "wrongCommand").ifPresent(sender::sendMessage);
+            if (args.length != 2) {
+                content.getMessageAfterPrefix(MessageType.ERROR, "wrongCommand").ifPresent(player::sendMessage);
                 return false;
             }
 
-            // TODO 설정 GUI 오픈
+            try {
+                RewardType rewardType = RewardType.valueOf(args[1].toUpperCase());
+                RewardSettingInventory rewardSettingInventory = new RewardSettingInventory(rewardType);
+                rewardSettingInventory.openInventory(player);
+            } catch (IllegalArgumentException e) {
+                content.getMessageAfterPrefix(MessageType.ERROR, "wrongRewardType").ifPresent(player::sendMessage);
+            }
             return false;
         }
         return false;
-    }
-
-    @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        List<String> tabList = new ArrayList<>();
-
-        if (args.length == 1) {
-            if (sender.hasPermission("starly.joinreward.reload")) tabList.add("리로드");
-            if (sender.hasPermission("starly.joinreward.set")) tabList.add("설정");
-            return StringUtil.copyPartialMatches(args[0], tabList, new ArrayList<>());
-        }
-        return Collections.emptyList();
     }
 }

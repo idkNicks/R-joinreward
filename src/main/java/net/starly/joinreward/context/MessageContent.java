@@ -5,6 +5,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class MessageContent {
 
@@ -20,20 +21,20 @@ public class MessageContent {
 
     public void initialize(FileConfiguration file) {
         messageMap.clear();
-        for (MessageType type : MessageType.values()) {
-            ConfigurationSection configSection = file.getConfigurationSection(type.key);
-            if (configSection != null) {
-                initializeMessages(type, configSection);
-            }
-        }
+        Arrays.stream(MessageType.values())
+                .forEach(type -> {
+                    ConfigurationSection configSection = file.getConfigurationSection(type.getKey());
+                    if (configSection != null) initializeMessages(type, configSection);
+                });
     }
+
 
     private void initializeMessages(MessageType type, ConfigurationSection configSection) {
         Map<String, String> messages = messageMap.computeIfAbsent(type, key -> new HashMap<>());
-        for (String key : configSection.getKeys(true)) {
-            messages.put(key, ChatColor.translateAlternateColorCodes('&', configSection.getString(key)));
-        }
+        messages.putAll(configSection.getKeys(true).stream()
+                .collect(Collectors.toMap(key -> key, key -> ChatColor.translateAlternateColorCodes('&', configSection.getString(key)))));
     }
+
 
     public Optional<String> getMessage(MessageType type, String key) {
         return Optional.ofNullable(messageMap.getOrDefault(type, Collections.emptyMap()).get(key));

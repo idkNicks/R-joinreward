@@ -5,9 +5,66 @@
 database:
   host: localhost
   port: 3306
-  database: ragina
+  database: regina
   username: root
-  password: Sunny439501!
+  password: password1234!@#$
+
+
+# + -------------------------------------------------------------------------------- + #
+# | REWARD SETTINGS ( 보상 설정 )
+# + -------------------------------------------------------------------------------- + #
+reward:
+  # 초기화 되는 시간 (8시 일 경우 / hour: 8 minute: 0) 이렇게 입력 해주세요.
+  # 기본 값은 오전 12시(am.12)로 설정되어 있습니다.
+  # 0 ~ 23까지 입니다.
+  # hour: 시간
+  # minute: 분
+  hour: 0
+  minute: 0
+
+  # 보상 시간 이름 설정
+  time_name:
+    REWARD_30M: '30분'
+    REWARD_1H: '1시간'
+    REWARD_2H: '2시간'
+    REWARD_3H: '3시간'
+    REWARD_6H: '6시간'
+    REWARD_12H: '12시간'
+    REWARD_15H: '15시간'
+
+  # 보상 GUI 설정
+  gui:
+    # 보상을 받을 수 있을 때 아이템 설정 (줄바꿈은 "\n"으로 가능합니다.)
+    canReward:
+      # 아이템 종류 (https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html)
+      material: ENDER_CHEST
+      # 아이템 이름
+      # {time}: 위에 지정된 보상 시간 이름 설정 이름입니다.
+      displayname: '&6[보상] {time}'
+      # 아이템 로어
+      lore: '\n &a클릭시 보상을 지급 받습니다.'
+
+    # 보상을 받을 수 없을 때 아이템 설정 (줄바꿈은 "\n"으로 가능합니다.)
+    cantReward:
+      # 아이템 종류 (https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html)
+      material: BARRIER
+      # 아이템 이름
+      # {time}: 위에 지정된 보상 시간 이름 설정 이름입니다.
+      displayname: '&6[보상] {time}'
+      # 아이템 로어
+      # 남은시간: {time}
+      lore: '\n &c아직 보상을 받을 수 없습니다. \n &6[남은시간] : {time}'
+
+    # 이미 보상을 받았을 때 아이템 설정 (줄바꿈은 "\n"으로 가능합니다.)
+    receivedReward:
+      # 아이템 종류 (https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html)
+      material: CHEST
+      # 아이템 이름
+      # {time}: 위에 지정된 보상 시간 이름 설정 이름입니다.
+      displayname: '&6[보상] {time}'
+      # 아이템 로어
+      # 남은시간: {time}
+      lore: '\n &c이미 보상을 지급 받았습니다.'
 
 
 # + -------------------------------------------------------------------------------- + #
@@ -22,6 +79,12 @@ messages:
   # 콘피그를 리로드 하였을 때 출력되는 메시지
   reloadComplete: '&a콘피그를 리로드하였습니다.'
 
+  # 보상을 받았을 때 출력되는 메시지
+  receiveReward: '&a접속시간 보상을 지급 받았습니다.'
+
+  # 접속보상이 초기화 되었을 때 출력되는 메시지
+  dailyResetMessage: '&a접속보상이 초기화 되었습니다. [/접속보상]'
+
 
 errorMessages:
   # 권한이 없을 때 출력되는 메시지
@@ -32,3 +95,19 @@ errorMessages:
 
   # 잘못된 명령어를 사용하였을 때 출력되는 메시지
   wrongCommand: '&c잘못된 명령어입니다. (다시 시도해주세요)'
+
+  # 올바르지 않은 REWARD TYPE일 경우 출력되는 메시지
+  wrongRewardType: '&c올바르지 않은 보상 종류 입니다.'
+
+  # 보상을 받는 도중 sql에 문제가 발생했을 경우 출력되는 메시지
+  rewardSQLException: '&c보상을 받는 도중 오류가 발생하였습니다 (관리자에게 문의해주세요)'
+
+  # 이미 보상을 받았을 때 출력되는 메시지
+  alreadyRewardReceived: '&c이미 해당 접속시간 보상을 받으셨습니다.'
+
+  # 인벤토리 공간이 충분하지 않아 보상읋 받지 못했을 경우 출력되는 메시지
+  hasEnoughInventorySpace: '&c인벤토리 공간이 부족하여 보상을 받지 못하였습니다.'
+
+  # 보상을 받기에 접속시간이 충분하지 않을 경우 출력되는 메시지
+  # {time}: 남은시간
+  InsufficientPlaytimeReward: '&c접속시간이 부족하여 아직 보상을 받을 수 없습니다. (남은시간: {time})'
