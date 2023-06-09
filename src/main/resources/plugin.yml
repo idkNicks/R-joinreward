@@ -10,5 +10,18 @@ depend: [ ST-Core ]
 version: 1.0
 api-version: 1.19
 
+permissions:
+  starly.joinreward.reload:
+    description: 리로드 명령어
+    default: op
+  starly.joinreward.set:
+    description: 접속보상 설정 명령어
+    default: op
+  starly.joinreward.*:
+    default: R-joinreward 명령어에 대한 모든 권한
+    children:
+      - starly.joinreward.reload
+      - starly.joinreward.set
+
 commands:
   접속보상:

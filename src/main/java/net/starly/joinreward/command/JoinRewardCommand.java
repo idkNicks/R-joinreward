@@ -3,7 +3,6 @@ package net.starly.joinreward.command;
 import net.starly.joinreward.JoinReward;
 import net.starly.joinreward.context.MessageContent;
 import net.starly.joinreward.context.MessageType;
-import net.starly.joinreward.database.PlayerCacheManager;
 import net.starly.joinreward.database.RewardType;
 import net.starly.joinreward.inventory.RewardInventory;
 import net.starly.joinreward.inventory.RewardSettingInventory;
