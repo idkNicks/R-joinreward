@@ -36,7 +36,7 @@ public class DatabaseManager {
 
         try (Connection conn = getConnection()) {
             Statement stmt = conn.createStatement();
-            String playtimeSql = "CREATE TABLE IF NOT EXISTS playtime (" +
+            String playtimeSql = "CREATE TABLE IF NOT EXISTS joinreward_playtime (" +
                     "player VARCHAR(36) PRIMARY KEY," +
                     "time INT," +
                     "reward_30m TINYINT(1) DEFAULT 0," +
@@ -48,7 +48,7 @@ public class DatabaseManager {
                     "reward_15h TINYINT(1) DEFAULT 0)";
             stmt.executeUpdate(playtimeSql);
 
-            String playerRewardsSql = "CREATE TABLE IF NOT EXISTS reward_items (" +
+            String playerRewardsSql = "CREATE TABLE IF NOT EXISTS joinreward_reward_items (" +
                     "reward_type ENUM('REWARD_30M', 'REWARD_1H', 'REWARD_2H', 'REWARD_3H', 'REWARD_6H', 'REWARD_12H', 'REWARD_15H')," +
                     "item_slot INT," +
                     "serialized_item TEXT," +
@@ -64,7 +64,7 @@ public class DatabaseManager {
 
     public static void loadAllPlayerDataFromDatabase() {
         try (Connection conn = getConnection()) {
-            String query = "SELECT * FROM playtime";
+            String query = "SELECT * FROM joinreward_playtime";
             try (PreparedStatement stmt = conn.prepareStatement(query)) {
                 try (ResultSet rs = stmt.executeQuery()) {
                     loadRewardDataFromResultSet(rs, Optional.empty());
@@ -75,7 +75,7 @@ public class DatabaseManager {
 
     public static void loadPlayerDataFromDatabase(UUID player) {
         try (Connection conn = getConnection()) {
-            String query = "SELECT * FROM playtime WHERE player = ?";
+            String query = "SELECT * FROM joinreward_playtime WHERE player = ?";
             try (PreparedStatement stmt = conn.prepareStatement(query)) {
                 stmt.setString(1, player.toString());
                 try (ResultSet rs = stmt.executeQuery()) {
@@ -108,7 +108,7 @@ public class DatabaseManager {
         if (PlayerCacheManager.getPlaytimeCache().containsKey(player)) {
             int time = PlayerCacheManager.getPlaytime(player);
             try (Connection conn = getConnection()) {
-                String query = "INSERT INTO playtime (player, time) VALUES (?, ?)" +
+                String query = "INSERT INTO joinreward_playtime (player, time) VALUES (?, ?)" +
                         "ON DUPLICATE KEY UPDATE time = VALUES(time)";
                 try (PreparedStatement stmt = conn.prepareStatement(query)) {
                     stmt.setString(1, player.toString());
@@ -124,7 +124,7 @@ public class DatabaseManager {
                 String rewardField = entry.getKey();
                 boolean value = entry.getValue();
                 try (Connection conn = getConnection()) {
-                    String query = "UPDATE playtime SET " + rewardField + " = ? WHERE player = ?";
+                    String query = "UPDATE joinreward_playtime SET " + rewardField + " = ? WHERE player = ?";
                     try (PreparedStatement stmt = conn.prepareStatement(query)) {
                         stmt.setBoolean(1, value);
                         stmt.setString(2, player.toString());

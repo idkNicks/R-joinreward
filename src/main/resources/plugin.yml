@@ -18,7 +18,7 @@ permissions:
     description: 접속보상 설정 명령어
     default: op
   starly.joinreward.*:
-    default: R-joinreward 명령어에 대한 모든 권한
+    description: R-joinreward 명령어에 대한 모든 권한
     children:
       - starly.joinreward.reload
       - starly.joinreward.set

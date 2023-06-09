@@ -40,8 +40,8 @@ public class RewardSettingInventory extends InventoryListenerBase {
 
     private void saveItemsToDatabase(Inventory inventory) {
         try (Connection conn = DatabaseManager.getConnection()) {
-            String deleteQuery = "DELETE FROM reward_items WHERE reward_type = ? AND item_slot = ?";
-            String insertOrUpdateQuery = "INSERT INTO reward_items (reward_type, item_slot, serialized_item) VALUES (?, ?, ?)" +
+            String deleteQuery = "DELETE FROM joinreward_reward_items WHERE reward_type = ? AND item_slot = ?";
+            String insertOrUpdateQuery = "INSERT INTO joinreward_reward_items (reward_type, item_slot, serialized_item) VALUES (?, ?, ?)" +
                     "ON DUPLICATE KEY UPDATE serialized_item = ?";
             for (int i = 0; i < INVENTORY_SIZE; i++) {
                 ItemStack item = inventory.getItem(i);
@@ -67,7 +67,7 @@ public class RewardSettingInventory extends InventoryListenerBase {
 
     private void loadItemsFromDatabase(Inventory inventory) {
         try (Connection conn = DatabaseManager.getConnection()) {
-            String query = "SELECT item_slot, serialized_item FROM reward_items WHERE reward_type = ?";
+            String query = "SELECT item_slot, serialized_item FROM joinreward_reward_items WHERE reward_type = ?";
             try (PreparedStatement stmt = conn.prepareStatement(query)) {
                 stmt.setString(1, this.rewardType.toString());
                 try (ResultSet rs = stmt.executeQuery()) {
@@ -85,7 +85,7 @@ public class RewardSettingInventory extends InventoryListenerBase {
     public ItemStack[] getRewardItems() throws SQLException {
         ItemStack[] rewardItems = new ItemStack[INVENTORY_SIZE];
         try (Connection conn = DatabaseManager.getConnection()) {
-            String query = "SELECT item_slot, serialized_item FROM reward_items WHERE reward_type = ?";
+            String query = "SELECT item_slot, serialized_item FROM joinreward_reward_items WHERE reward_type = ?";
             try (PreparedStatement stmt = conn.prepareStatement(query)) {
                 stmt.setString(1, this.rewardType.toString());
                 try (ResultSet rs = stmt.executeQuery()) {

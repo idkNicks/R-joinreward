@@ -40,7 +40,7 @@ public class DailyResetScheduler extends BukkitRunnable {
 
     private void resetPlaytimeAndRewards() {
         try (Connection conn = DatabaseManager.getConnection()) {
-            String resetSql = "UPDATE playtime SET time = 0, reward_30m = 0, reward_1h = 0, " +
+            String resetSql = "UPDATE joinreward_playtime SET time = 0, reward_30m = 0, reward_1h = 0, " +
                     "reward_2h = 0, reward_3h = 0, reward_6h = 0, reward_12h = 0, reward_15h = 0";
             try (PreparedStatement stmt = conn.prepareStatement(resetSql)) {
                 stmt.executeUpdate();
